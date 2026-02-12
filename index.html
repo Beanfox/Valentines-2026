@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 25%, #ffd6eb 50%, #ffcce5 75%, #ffc2e0 100%);
+            background-attachment: fixed;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Interactive background canvas */
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Animated floating hearts background */
+        .heart-float {
+            position: fixed;
+            font-size: 2em;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            animation: float-up 15s infinite ease-in-out;
+        }
+
+        .heart-float:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .heart-float:nth-child(2) { left: 20%; animation-delay: 2s; font-size: 1.5em; }
+        .heart-float:nth-child(3) { left: 30%; animation-delay: 4s; }
+        .heart-float:nth-child(4) { left: 40%; animation-delay: 6s; font-size: 2.5em; }
+        .heart-float:nth-child(5) { left: 50%; animation-delay: 8s; }
+        .heart-float:nth-child(6) { left: 60%; animation-delay: 1s; font-size: 1.8em; }
+        .heart-float:nth-child(7) { left: 70%; animation-delay: 3s; }
+        .heart-float:nth-child(8) { left: 80%; animation-delay: 5s; font-size: 2.2em; }
+        .heart-float:nth-child(9) { left: 90%; animation-delay: 7s; }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Top floating hearts */
+        body::before {
+            content: "❤️ 💕 💖 💗 💝 ❤️ 💕 💖 💗 💝";
+            position: fixed;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            font-size: 2em;
+            opacity: 0.15;
+            animation: float-hearts 20s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "💝 💗 💖 💕 ❤️ 💝 💗 💖 💕 ❤️";
+            position: fixed;
+            bottom: -50px;
+            right: 0;
+            width: 100%;
+            font-size: 2em;
+            opacity: 0.15;
+            animation: float-hearts-reverse 25s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes float-hearts {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes float-hearts-reverse {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Title section - integrated like a photo */
+        .title-item {
+            margin-bottom: 120vh;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.3);
+            transition: all 0.6s ease;
+            border: 3px solid rgba(255, 179, 208, 0.5);
+            position: relative;
+            opacity: 0;
+            transform: translateY(100px) scale(0.9);
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .title-item.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .title-item.fade-out {
+            opacity: 0;
+            transform: translateY(-100px) scale(0.9);
+        }
+
+        .title-item h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3.5em;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+            animation: pulse 2s ease-in-out infinite, rainbow-text 6s ease-in-out infinite;
+            background: linear-gradient(45deg, #ff69b4, #ff85c1, #ffb3d9, #ff69b4);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes rainbow-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .title-item::before {
+            content: "💘";
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            animation: spin-heart 3s ease-in-out infinite, bounce 1s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        .title-item::after {
+            content: "💘";
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            animation: spin-heart 3s ease-in-out infinite reverse, bounce 1s ease-in-out infinite 0.5s;
+            opacity: 0.7;
+        }
+
+        @keyframes spin-heart {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-50%) rotate(20deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-60%) scale(1.1); }
+        }
+
+        .title-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 182, 193, 0.5);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .title-item.visible:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .photo-item {
+            margin-bottom: 120vh;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
+            transition: all 0.6s ease;
+            border: 4px solid #ffb3d0;
+            position: relative;
+            opacity: 0;
+            transform: translateY(100px) scale(0.9);
+        }
+
+        .photo-item.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .photo-item.fade-out {
+            opacity: 0;
+            transform: translateY(-100px) scale(0.9);
+        }
+
+        .photo-item::before {
+            content: "💕";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2em;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: heart-beat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heart-beat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+        }
+
+        .photo-item:hover {
+            transform: translateY(-10px) rotate(-1deg) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 107, 157, 0.5);
+        }
+
+        .photo-item.visible:hover {
+            transform: translateY(-10px) rotate(-1deg) scale(1.02);
+        }
+
+        .photo-item:hover::before {
+            opacity: 1;
+            transform: scale(1.3) rotate(15deg);
+        }
+
+        .photo-item::after {
+            content: "✨";
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 2em;
+            opacity: 0;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: rotate(0deg) scale(0.8); }
+            50% { opacity: 0.6; transform: rotate(180deg) scale(1.2); }
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-caption {
+            padding: 25px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #c06c84;
+            background: linear-gradient(to right, #ffe0f0, #fff5fa, #ffe0f0);
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .title-item h1 {
+                font-size: 2.2em;
+            }
+
+            .title-item::before,
+            .title-item::after {
+                font-size: 2em;
+            }
+
+            .photo-item {
+                margin-bottom: 100vh;
+            }
+
+            .title-item {
+                margin-bottom: 100vh;
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Interactive background canvas -->
+<canvas id="background-canvas"></canvas>
+
+<!-- Floating hearts -->
+<div class="heart-float">❤️</div>
+<div class="heart-float">💕</div>
+<div class="heart-float">💖</div>
+<div class="heart-float">💗</div>
+<div class="heart-float">💝</div>
+<div class="heart-float">💕</div>
+<div class="heart-float">❤️</div>
+<div class="heart-float">💖</div>
+<div class="heart-float">💗</div>
+
+<div class="gallery-container">
+    <!-- Title - treated like a photo -->
+    <div class="title-item">
+        <h1>My Valentine's Gallery</h1>
+    </div>
+
+    <!-- Photo 1 -->
+    <div class="photo-item">
+        <img src="photo1.jpg" alt="Photo 1">
+        <div class="photo-caption">Caption for photo 1</div>
+    </div>
+
+    <!-- Photo 2 -->
+    <div class="photo-item">
+        <img src="photo2.jpg" alt="Photo 2">
+        <div class="photo-caption">Caption for photo 2</div>
+    </div>
+
+    <!-- Photo 3 -->
+    <div class="photo-item">
+        <img src="photo3.jpg" alt="Photo 3">
+        <div class="photo-caption">Caption for photo 3</div>
+    </div>
+
+    <!-- Photo 4 -->
+    <div class="photo-item">
+        <img src="photo4.jpg" alt="Photo 4">
+        <div class="photo-caption">Caption for photo 4</div>
+    </div>
+
+    <!-- Add more photo items as needed -->
+</div>
+
+<script>
+    // Interactive background with pink dots - OPTIMIZED
+    const canvas = document.getElementById('background-canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+
+    // Create fewer dots for better performance
+    const dots = [];
+    const dotCount = 50;
+
+    for (let i = 0; i < dotCount; i++) {
+        dots.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            baseX: Math.random() * canvas.width,
+            baseY: Math.random() * canvas.height,
+            size: Math.random() * 3 + 2,
+            speedX: (Math.random() - 0.5) * 0.3,
+            speedY: (Math.random() - 0.5) * 0.3,
+            color: `rgba(255, ${Math.floor(Math.random() * 80 + 120)}, ${Math.floor(Math.random() * 80 + 165)}, ${Math.random() * 0.3 + 0.3})`
+        });
+    }
+
+    // Throttle mouse move for better performance
+    let mouseUpdateTimeout;
+    document.addEventListener('mousemove', (e) => {
+        if (mouseUpdateTimeout) return;
+
+        mouseUpdateTimeout = setTimeout(() => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            mouseUpdateTimeout = null;
+        }, 16);
+    });
+
+    // Animate dots with optimizations
+    function animateDots() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        dots.forEach((dot, index) => {
+            // Move toward mouse
+            const dx = mouseX - dot.x;
+            const dy = mouseY - dot.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 180) {
+                const force = (180 - distance) / 180;
+                dot.x += (dx / distance) * force * 1.5;
+                dot.y += (dy / distance) * force * 1.5;
+            } else {
+                // Return to base position
+                dot.x += (dot.baseX - dot.x) * 0.02;
+                dot.y += (dot.baseY - dot.y) * 0.02;
+            }
+
+            // Add random movement
+            dot.x += dot.speedX;
+            dot.y += dot.speedY;
+
+            // Bounce off edges
+            if (dot.x < 0 || dot.x > canvas.width) dot.speedX *= -1;
+            if (dot.y < 0 || dot.y > canvas.height) dot.speedY *= -1;
+
+            // Draw dot
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+            ctx.fillStyle = dot.color;
+            ctx.fill();
+
+            // Draw connections - only check forward to avoid duplicates
+            for (let j = index + 1; j < dots.length; j++) {
+                const otherDot = dots[j];
+                const dist = Math.sqrt((dot.x - otherDot.x) ** 2 + (dot.y - otherDot.y) ** 2);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(dot.x, dot.y);
+                    ctx.lineTo(otherDot.x, otherDot.y);
+                    ctx.strokeStyle = `rgba(255, 182, 193, ${0.25 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        });
+
+        requestAnimationFrame(animateDots);
+    }
+
+    animateDots();
+
+    // Resize canvas on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }, 250);
+    });
+
+    // Scroll-based fade in/out animation (includes title now)
+    const scrollItems = document.querySelectorAll('.photo-item, .title-item');
+
+    function checkScroll() {
+        const windowHeight = window.innerHeight;
+        const windowCenter = window.scrollY + windowHeight / 2;
+
+        scrollItems.forEach(item => {
+            const itemTop = item.offsetTop;
+            const itemHeight = item.offsetHeight;
+            const itemCenter = itemTop + itemHeight / 2;
+
+            const distance = Math.abs(windowCenter - itemCenter);
+            const threshold = windowHeight * 0.6;
+
+            if (distance < threshold) {
+                item.classList.add('visible');
+                item.classList.remove('fade-out');
+            } else {
+                item.classList.remove('visible');
+                item.classList.add('fade-out');
+            }
+        });
+    }
+
+    let checkScrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (checkScrollTimeout) return;
+
+        checkScrollTimeout = setTimeout(() => {
+            checkScroll();
+            checkScrollTimeout = null;
+        }, 16);
+    });
+
+    checkScroll();
+</script>
+</body>
+</html>
