@@ -116,7 +116,7 @@
 
         /* Title section - integrated like a photo */
         .title-item {
-            margin-bottom: 120vh;
+            margin-bottom: 30vh;
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -211,16 +211,23 @@
         }
 
         .photo-item {
-            margin-bottom: 120vh;
+            margin-bottom: 40vh;
             background: white;
             border-radius: 20px;
-            overflow: hidden;
             box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
             transition: all 0.6s ease;
             border: 4px solid #ffb3d0;
             position: relative;
             opacity: 0;
             transform: translateY(100px) scale(0.9);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: fit-content;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .photo-item.visible {
@@ -281,11 +288,33 @@
             50% { opacity: 0.6; transform: rotate(180deg) scale(1.2); }
         }
 
-        .photo-item img {
+        /* Image container - compact with no extra space */
+        .photo-item .image-container {
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .photo-item img {
+            max-width: 100%;
+            max-height: 65vh;
+            width: auto;
             height: auto;
             display: block;
             transition: transform 0.6s ease;
+            object-fit: contain;
+        }
+
+        /* Portrait images - narrower container */
+        .photo-item.portrait {
+            max-width: 650px;
+        }
+
+        .photo-item.portrait img {
+            max-height: 62vh;
         }
 
         .photo-item:hover img {
@@ -293,18 +322,15 @@
         }
 
         .photo-caption {
-            padding: 25px;
+            padding: 20px 25px;
             text-align: center;
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: 600;
             color: #c06c84;
             background: linear-gradient(to right, #ffe0f0, #fff5fa, #ffe0f0);
-            animation: gradient-shift 3s ease infinite;
-        }
-
-        @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 15px;
         }
 
         /* Smooth scrolling */
@@ -325,204 +351,226 @@
             }
 
             .photo-item {
-                margin-bottom: 100vh;
+                margin-bottom: 35vh;
+                max-width: 95%;
             }
 
             .title-item {
-                margin-bottom: 100vh;
+                margin-bottom: 25vh;
                 padding: 40px 20px;
+            }
+
+            .photo-item img {
+                max-height: 58vh;
+            }
+
+            .photo-item.portrait img {
+                max-height: 55vh;
+            }
+
+            .photo-caption {
+                font-size: 1.1em;
+                padding: 15px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Interactive background canvas -->
-    <canvas id="background-canvas"></canvas>
+<!-- Interactive background canvas -->
+<canvas id="background-canvas"></canvas>
 
-    <!-- Floating hearts -->
-    <div class="heart-float">❤️</div>
-    <div class="heart-float">💕</div>
-    <div class="heart-float">💖</div>
-    <div class="heart-float">💗</div>
-    <div class="heart-float">💝</div>
-    <div class="heart-float">💕</div>
-    <div class="heart-float">❤️</div>
-    <div class="heart-float">💖</div>
-    <div class="heart-float">💗</div>
+<!-- Floating hearts -->
+<div class="heart-float">❤️</div>
+<div class="heart-float">💕</div>
+<div class="heart-float">💖</div>
+<div class="heart-float">💗</div>
+<div class="heart-float">💝</div>
+<div class="heart-float">💕</div>
+<div class="heart-float">❤️</div>
+<div class="heart-float">💖</div>
+<div class="heart-float">💗</div>
 
-    <div class="gallery-container">
-        <!-- Title - treated like a photo -->
-        <div class="title-item">
-            <h1>❤️ Happy Valentines Rachel ❤️</h1>
-        </div>
-
-        <!-- Photo 1 -->
-        <div class="photo-item">
-            <img src="RachelPotluckPhoto.JPEG">
-            <div class="photo-caption">Caption for photo 1</div>
-        </div>
-
-        <!-- Photo 2 -->
-        <div class="photo-item">
-            <img src="RachelPuzzlePhoto2.jpg" alt="Photo 2">
-            <div class="photo-caption">Caption for photo 2</div>
-        </div>
-
-        <!-- Photo 3 -->
-        <div class="photo-item">
-            <img src="photo3.jpg" alt="Photo 3">
-            <div class="photo-caption">Caption for photo 3</div>
-        </div>
-
-        <!-- Photo 4 -->
-        <div class="photo-item">
-            <img src="photo4.jpg" alt="Photo 4">
-            <div class="photo-caption">Caption for photo 4</div>
-        </div>
-
-        <!-- Add more photo items as needed -->
+<div class="gallery-container">
+    <!-- Title - treated like a photo -->
+    <div class="title-item">
+        <h1>❤️ Happy Valentines Rachel ❤️</h1>
     </div>
 
-    <script>
-        // Interactive background with pink dots - OPTIMIZED
-        const canvas = document.getElementById('background-canvas');
-        const ctx = canvas.getContext('2d');
+    <!-- Photo 1 -->
+    <div class="photo-item">
+        <div class="image-container">
+            <img src="RachelPotluckPhoto.JPEG" alt="Photo 1">
+        </div>
+        <div class="photo-caption">Caption for photo 1</div>
+    </div>
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    <!-- Photo 2 - Portrait -->
+    <div class="photo-item portrait">
+        <div class="image-container">
+            <img src="RachelPuzzlePhoto2.jpg" alt="Photo 2">
+        </div>
+        <div class="photo-caption">Caption for photo 2</div>
+    </div>
 
-        let mouseX = canvas.width / 2;
-        let mouseY = canvas.height / 2;
+    <!-- Photo 3 -->
+    <div class="photo-item">
+        <div class="image-container">
+            <img src="photo3.jpg" alt="Photo 3">
+        </div>
+        <div class="photo-caption">Caption for photo 3</div>
+    </div>
 
-        // Create fewer dots for better performance
-        const dots = [];
-        const dotCount = 50;
+    <!-- Photo 4 -->
+    <div class="photo-item">
+        <div class="image-container">
+            <img src="photo4.jpg" alt="Photo 4">
+        </div>
+        <div class="photo-caption">Caption for photo 4</div>
+    </div>
 
-        for (let i = 0; i < dotCount; i++) {
-            dots.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                baseX: Math.random() * canvas.width,
-                baseY: Math.random() * canvas.height,
-                size: Math.random() * 3 + 2,
-                speedX: (Math.random() - 0.5) * 0.3,
-                speedY: (Math.random() - 0.5) * 0.3,
-                color: `rgba(255, ${Math.floor(Math.random() * 80 + 120)}, ${Math.floor(Math.random() * 80 + 165)}, ${Math.random() * 0.3 + 0.3})`
-            });
-        }
+    <!-- Add more photo items as needed -->
+</div>
 
-        // Throttle mouse move for better performance
-        let mouseUpdateTimeout;
-        document.addEventListener('mousemove', (e) => {
-            if (mouseUpdateTimeout) return;
+<script>
+    // Interactive background with pink dots - OPTIMIZED
+    const canvas = document.getElementById('background-canvas');
+    const ctx = canvas.getContext('2d');
 
-            mouseUpdateTimeout = setTimeout(() => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                mouseUpdateTimeout = null;
-            }, 16);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+
+    // Create fewer dots for better performance
+    const dots = [];
+    const dotCount = 50;
+
+    for (let i = 0; i < dotCount; i++) {
+        dots.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            baseX: Math.random() * canvas.width,
+            baseY: Math.random() * canvas.height,
+            size: Math.random() * 3 + 2,
+            speedX: (Math.random() - 0.5) * 0.3,
+            speedY: (Math.random() - 0.5) * 0.3,
+            color: `rgba(255, ${Math.floor(Math.random() * 80 + 120)}, ${Math.floor(Math.random() * 80 + 165)}, ${Math.random() * 0.3 + 0.3})`
+        });
+    }
+
+    // Throttle mouse move for better performance
+    let mouseUpdateTimeout;
+    document.addEventListener('mousemove', (e) => {
+        if (mouseUpdateTimeout) return;
+
+        mouseUpdateTimeout = setTimeout(() => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            mouseUpdateTimeout = null;
+        }, 16);
+    });
+
+    // Animate dots with optimizations
+    function animateDots() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        dots.forEach((dot, index) => {
+            // Move toward mouse
+            const dx = mouseX - dot.x;
+            const dy = mouseY - dot.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 180) {
+                const force = (180 - distance) / 180;
+                dot.x += (dx / distance) * force * 1.5;
+                dot.y += (dy / distance) * force * 1.5;
+            } else {
+                // Return to base position
+                dot.x += (dot.baseX - dot.x) * 0.02;
+                dot.y += (dot.baseY - dot.y) * 0.02;
+            }
+
+            // Add random movement
+            dot.x += dot.speedX;
+            dot.y += dot.speedY;
+
+            // Bounce off edges
+            if (dot.x < 0 || dot.x > canvas.width) dot.speedX *= -1;
+            if (dot.y < 0 || dot.y > canvas.height) dot.speedY *= -1;
+
+            // Draw dot
+            ctx.beginPath();
+            ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+            ctx.fillStyle = dot.color;
+            ctx.fill();
+
+            // Draw connections - only check forward to avoid duplicates
+            for (let j = index + 1; j < dots.length; j++) {
+                const otherDot = dots[j];
+                const dist = Math.sqrt((dot.x - otherDot.x) ** 2 + (dot.y - otherDot.y) ** 2);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(dot.x, dot.y);
+                    ctx.lineTo(otherDot.x, otherDot.y);
+                    ctx.strokeStyle = `rgba(255, 182, 193, ${0.25 * (1 - dist / 120)})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
         });
 
-        // Animate dots with optimizations
-        function animateDots() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(animateDots);
+    }
 
-            dots.forEach((dot, index) => {
-                // Move toward mouse
-                const dx = mouseX - dot.x;
-                const dy = mouseY - dot.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+    animateDots();
 
-                if (distance < 180) {
-                    const force = (180 - distance) / 180;
-                    dot.x += (dx / distance) * force * 1.5;
-                    dot.y += (dy / distance) * force * 1.5;
-                } else {
-                    // Return to base position
-                    dot.x += (dot.baseX - dot.x) * 0.02;
-                    dot.y += (dot.baseY - dot.y) * 0.02;
-                }
+    // Resize canvas on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }, 250);
+    });
 
-                // Add random movement
-                dot.x += dot.speedX;
-                dot.y += dot.speedY;
+    // Scroll-based fade in/out animation (includes title now)
+    const scrollItems = document.querySelectorAll('.photo-item, .title-item');
 
-                // Bounce off edges
-                if (dot.x < 0 || dot.x > canvas.width) dot.speedX *= -1;
-                if (dot.y < 0 || dot.y > canvas.height) dot.speedY *= -1;
+    function checkScroll() {
+        const windowHeight = window.innerHeight;
+        const windowCenter = window.scrollY + windowHeight / 2;
 
-                // Draw dot
-                ctx.beginPath();
-                ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
-                ctx.fillStyle = dot.color;
-                ctx.fill();
+        scrollItems.forEach(item => {
+            const itemTop = item.offsetTop;
+            const itemHeight = item.offsetHeight;
+            const itemCenter = itemTop + itemHeight / 2;
 
-                // Draw connections - only check forward to avoid duplicates
-                for (let j = index + 1; j < dots.length; j++) {
-                    const otherDot = dots[j];
-                    const dist = Math.sqrt((dot.x - otherDot.x) ** 2 + (dot.y - otherDot.y) ** 2);
-                    if (dist < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(dot.x, dot.y);
-                        ctx.lineTo(otherDot.x, otherDot.y);
-                        ctx.strokeStyle = `rgba(255, 182, 193, ${0.25 * (1 - dist / 120)})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                    }
-                }
-            });
+            const distance = Math.abs(windowCenter - itemCenter);
+            const threshold = windowHeight * 0.6;
 
-            requestAnimationFrame(animateDots);
-        }
-
-        animateDots();
-
-        // Resize canvas on window resize
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }, 250);
+            if (distance < threshold) {
+                item.classList.add('visible');
+                item.classList.remove('fade-out');
+            } else {
+                item.classList.remove('visible');
+                item.classList.add('fade-out');
+            }
         });
+    }
 
-        // Scroll-based fade in/out animation (includes title now)
-        const scrollItems = document.querySelectorAll('.photo-item, .title-item');
+    let checkScrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (checkScrollTimeout) return;
 
-        function checkScroll() {
-            const windowHeight = window.innerHeight;
-            const windowCenter = window.scrollY + windowHeight / 2;
+        checkScrollTimeout = setTimeout(() => {
+            checkScroll();
+            checkScrollTimeout = null;
+        }, 16);
+    });
 
-            scrollItems.forEach(item => {
-                const itemTop = item.offsetTop;
-                const itemHeight = item.offsetHeight;
-                const itemCenter = itemTop + itemHeight / 2;
-
-                const distance = Math.abs(windowCenter - itemCenter);
-                const threshold = windowHeight * 0.6;
-
-                if (distance < threshold) {
-                    item.classList.add('visible');
-                    item.classList.remove('fade-out');
-                } else {
-                    item.classList.remove('visible');
-                    item.classList.add('fade-out');
-                }
-            });
-        }
-
-        let checkScrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (checkScrollTimeout) return;
-
-            checkScrollTimeout = setTimeout(() => {
-                checkScroll();
-                checkScrollTimeout = null;
-            }, 16);
-        });
-
-        checkScroll();
-    </script>
+    checkScroll();
+</script>
 </body>
 </html>
